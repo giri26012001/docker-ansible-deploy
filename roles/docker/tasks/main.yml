@@ -1,0 +1,52 @@
+---
+- name: update apt cache
+  apt:
+    update_cache: yes
+
+- name: install packages
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: present
+
+- name: add docker gpg key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: add docker repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
+    state: present
+    filename: docker
+
+- name: install docker
+  apt:
+    name: docker-ce
+    state: latest
+    update_cache: yes
+
+- name: docker server running
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: pull image
+  docker_image:
+    name: nginx
+    source: pull
+
+- name: run container
+  docker_container:
+    name: nginx_app
+    image: nginx
+    state: started
+    ports: 80:80
+
+
+
+
