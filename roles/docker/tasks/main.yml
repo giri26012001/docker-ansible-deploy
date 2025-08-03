@@ -1,0 +1,72 @@
+---
+- name: install packages
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: present
+
+- name: Debug - packages installed
+  debug:
+    msg: "The required packages are installed"
+
+- name: add docker gpg key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Debug - GPG key
+  debug:
+    msg: "GPG key added successfully"
+
+- name: add docker repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+    filename: docker
+
+- name: Debug - Repo created
+  debug:
+    msg: "Docker repository is successfully created"
+
+- name: install docker
+  apt:
+    name: docker-ce
+    state: latest
+    update_cache: yes
+
+- name: Debug - installed docker
+  debug:
+    msg: "Docker successfully installed"
+
+- name: docker service running
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Debug - docker servcie running
+  debug:
+    msg: "Docker servcie is up and running"
+
+- name: pull image
+  docker_image:
+    name: busybox
+    source: pull
+
+- name: Debug - Image pulled
+  debug:
+    msg: "Docker successfully pulled the mentioned image"
+
+- name: run container
+  docker_container:
+    name: busybox
+    image: busybox
+    state: started
+    ports: 70:70
+
+- name: Debug - container running
+  debug:
+    msg: "Docker container is successfully started and running"
