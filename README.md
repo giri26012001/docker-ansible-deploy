@@ -20,3 +20,5 @@ Task 6: Pull Docker image:
 
 Task 7: Run Docker container
 - Starts a Docker container and maps port 70 to host port 70.
+
+Note: All debug tasks will provide you with a message if the particular task is successfully completed.
